@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "Workflow Engine API",
+    "description": "Complete API collection for the Workflow Engine",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "health"]
+        }
+      }
+    },
+    {
+      "name": "Create Graph - Simple",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"definition\": {\n    \"name\": \"Simple Code Analyzer\",\n    \"nodes\": [\n      {\"name\": \"extract\", \"type\": \"standard\", \"tool\": \"extract_functions\"},\n      {\"name\": \"complexity\", \"type\": \"standard\", \"tool\": \"check_complexity\"}\n    ],\n    \"edges\": [\n      {\"from_node\": \"extract\", \"to_node\": \"complexity\"}\n    ],\n    \"start_node\": \"extract\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/graph/create",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "graph", "create"]
+        }
+      }
+    },
+    {
+      "name": "Create Graph - Code Review (Full)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"definition\": {\n    \"name\": \"Code Review Agent\",\n    \"nodes\": [\n      {\"name\": \"extract\", \"type\": \"standard\", \"tool\": \"extract_functions\"},\n      {\"name\": \"complexity\", \"type\": \"standard\", \"tool\": \"check_complexity\"},\n      {\"name\": \"issues\", \"type\": \"standard\", \"tool\": \"detect_issues\"},\n      {\n        \"name\": \"improve\",\n        \"type\": \"loop\",\n        \"tool\": \"suggest_improvements\",\n        \"loop_condition\": \"quality_score < 80\",\n        \"max_iterations\": 3\n      }\n    ],\n    \"edges\": [\n      {\"from_node\": \"extract\", \"to_node\": \"complexity\"},\n      {\"from_node\": \"complexity\", \"to_node\": \"issues\"},\n      {\"from_node\": \"issues\", \"to_node\": \"improve\"}\n    ],\n    \"start_node\": \"extract\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/graph/create",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "graph", "create"]
+        }
+      }
+    },
+    {
+      "name": "Run Graph",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"graph_id\": \"{{graph_id}}\",\n  \"initial_state\": {\n    \"code\": \"def hello_world():\\n    print('Hello, World!')\\n\\ndef complex_function(x, y):\\n    if x > 0:\\n        if y > 0:\\n            for i in range(100):\\n                pass\\n    return x + y\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/graph/run",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "graph", "run"]
+        }
+      }
+    },
+    {
+      "name": "Get Execution State",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/graph/state/{{execution_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "graph", "state", "{{execution_id}}"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "graph_id",
+      "value": ""
+    },
+    {
+      "key": "execution_id",
+      "value": ""
+    }
+  ]
+}

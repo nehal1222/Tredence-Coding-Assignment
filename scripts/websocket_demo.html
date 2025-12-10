@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workflow Execution Logs</title>
+</head>
+<body>
+<h1>Workflow Logs</h1>
+<ul id="logs"></ul>
+
+<script>
+  // Replace with your actual execution_id
+  const executionId = "62b37b50-d135-4243-9717-f03be042a276";
+  const ws = new WebSocket(`ws://127.0.0.1:8000/ws/execution/${executionId}`);
+
+  ws.onopen = () => console.log("WebSocket connected");
+
+  ws.onmessage = (event) => {
+      const logList = document.getElementById("logs");
+      const data = JSON.parse(event.data);
+
+      // Clear old logs to avoid duplication
+      logList.innerHTML = "";
+
+      // Show each log from the workflow execution
+      data.logs.forEach(log => {
+          const item = document.createElement("li");
+          item.textContent = log;
+          logList.appendChild(item);
+      });
+
+      // Show current status
+      const statusItem = document.createElement("li");
+      statusItem.textContent = `Status: ${data.status}`;
+      logList.appendChild(statusItem);
+  };
+
+  ws.onerror = (err) => console.error("WebSocket error:", err);
+  ws.onclose = () => console.log("WebSocket closed");
+
+  data.logs.forEach(log => {
+    const item = document.createElement("li");
+    item.textContent = log;
+    logList.appendChild(item);
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  workflow-engine:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./workflow_engine.db
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
