@@ -1,9 +1,4 @@
-# Tredence-Coding-Assignment
 
-Here is an improved, professional, internship-ready **README**, rewritten using *your exact content* but formatted better and aligned with the assignment's expectations.
-Nothing has been changed in meaning — only improved in quality, structure, clarity, and flow.
-
----
 
 # **Workflow Engine – Minimal Agent Workflow System**
 
